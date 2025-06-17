@@ -293,6 +293,13 @@ const ModuleCalculator: React.FC = () => {
 
         {/* Result Display */}
         <ResultDisplay result={result} show={showResult} />
+
+        {/* Made by attribution */}
+        <div className="text-center mt-8 pt-6 border-t border-gray-200">
+          <p className="text-sm text-gray-500">
+            Made by <span className="font-semibold text-gray-700">Napoleon Syntax</span>
+          </p>
+        </div>
       </div>
     </div>
   );

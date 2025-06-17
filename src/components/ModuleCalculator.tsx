@@ -83,12 +83,14 @@ const ModuleCalculator: React.FC = () => {
       }
     }
 
-    // Validate all assessments
+    // Validate all assessments and calculate
     let totalWeight = 0;
+    let totalWeightedScore = 0;
     let currentWeightedScore = 0;
     let finalAssessmentWeight = 0;
     let finalAssessmentOutOf = 0;
     let finalAssessmentName = 'Final Assessment';
+    let allScoresProvided = true;
 
     assessments.forEach(assessment => {
       const score = parseFloat(assessment.score);
@@ -112,10 +114,13 @@ const ModuleCalculator: React.FC = () => {
           hasError = true;
         }
         if (!hasError) {
-          currentWeightedScore += (score / outOf) * weight;
+          const weightedScore = (score / outOf) * weight;
+          totalWeightedScore += weightedScore;
+          currentWeightedScore += weightedScore;
         }
       } else {
         // This is the assessment we're calculating for
+        allScoresProvided = false;
         if (isNaN(outOf) || outOf <= 0) {
           newErrors[`${assessment.id}-outOf`] = true;
           hasError = true;
@@ -153,6 +158,23 @@ const ModuleCalculator: React.FC = () => {
       return;
     }
 
+    // If all scores are provided, show final module percentage
+    if (allScoresProvided) {
+      const finalModulePercentage = totalWeightedScore;
+      const passStatus = finalModulePercentage >= PASS_RATE ? 'PASS' : 'FAIL';
+      const statusColor = finalModulePercentage >= PASS_RATE ? 'text-green-600' : 'text-red-600';
+      
+      setResult({
+        type: finalModulePercentage >= PASS_RATE ? 'success' : 'error',
+        title: `<span class="${statusColor}">Final Module Grade</span>`,
+        content: `<h2 class="text-4xl font-bold text-indigo-600 my-3">${finalModulePercentage.toFixed(2)}%</h2>
+                 <p class="text-gray-700 mb-2">Your final module grade is <strong>${finalModulePercentage.toFixed(2)}%</strong></p>
+                 <p class="text-xl font-bold ${statusColor}">${passStatus}</p>`
+      });
+      setShowResult(true);
+      return;
+    }
+
     if (finalAssessmentWeight === 0) {
       setResult({
         type: 'error',
@@ -163,7 +185,7 @@ const ModuleCalculator: React.FC = () => {
       return;
     }
 
-    // Calculate required score
+    // Calculate required score for remaining assessment
     const pointsNeeded = PASS_RATE - currentWeightedScore;
 
     if (pointsNeeded <= 0) {

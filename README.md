@@ -25,6 +25,11 @@ A comprehensive web application for MANCOSA Bachelor of Commerce in Information 
 - Current semester OSA timetable
 - Academic support resources and guidelines
 
+## Calculator Refactor (Oct 2025)
+The calculator logic is now fully unified in `src/lib/calculator.ts`. The legacy `ModuleCalculator` component was removed after parity verification (Issue #14). Upcoming enhancements:
+- Distinction strategy panel (Issue #15)
+- Policy-driven multi-year assessment model (Issue #21)
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/6eef1afe-163b-4aff-b154-de7e0b8b56bb
@@ -43,7 +48,7 @@ Changes made via Lovable will be committed automatically to this repo.
 
 If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+The only requirement is having Node.js & npm installed - https://github.com/nvm-sh/nvm#installing-and-updating
 
 Follow these steps:
 
@@ -87,7 +92,7 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/6eef1afe-163b-4aff-b154-de7e0b8b56bb) and click on Share -> Publish.
+Simply open https://lovable.dev/projects/6eef1afe-163b-4aff-b154-de7e0b8b56bb and click on Share -> Publish.
 
 ## Can I connect a custom domain to my Lovable project?
 
@@ -95,4 +100,4 @@ Yes, you can!
 
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Read more here: https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide

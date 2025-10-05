@@ -1,180 +1,70 @@
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Users, BookOpen, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import React, { useState } from 'react';
 import Navigation from '@/components/Navigation';
+import { RESOURCES, getAllCategories } from '@/data/resources';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ExternalLink, Search, HelpCircle } from 'lucide-react';
 
-const Resources: React.FC = () => {
-  const notebookLMGroups = [
-    {
-      name: 'Principles of Project Management',
-      url: 'https://notebooklm.google.com/notebook/ff3cfdbb-61d4-47f2-9659-1eeeffdaad9c',
-    },
-    {
-      name: 'Strategic Information Technology Management',
-      url: 'https://notebooklm.google.com/notebook/3fc49705-b188-4196-aa99-59617bbee9e8',
-    },
-    {
-      name: 'Information Systems',
-      url: 'https://notebooklm.google.com/notebook/89ef2256-5969-4bd7-89b9-d0e52db0f53e',
-    },
-    {
-      name: 'Principles of E-commerce',
-      url: 'https://notebooklm.google.com/notebook/d05b8126-2f1d-4e97-80e6-9dc0c2401e52',
-    },
-  ];
+const Resources = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const categories = getAllCategories();
 
-  const externalResources = [
-    {
-      name: 'MANCOSA Official Website',
-      url: 'https://www.mancosa.co.za/programme/',
-      description: 'Official MANCOSA programme information',
-    },
-    {
-      name: 'Shesha Books',
-      url: 'https://sheshabooks.co.za/books-by-course/mancosa/',
-      description: 'MANCOSA prescribed textbooks',
-    },
-    {
-      name: 'Discount Textbooks',
-      url: 'https://discounttextbooks.co.za/product-category/mancosa/',
-      description: 'Affordable MANCOSA textbooks',
-    },
-  ];
+  const filteredResources = RESOURCES.filter(resource =>
+    resource.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    resource.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    resource.details?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const groupedResources = categories.map(category => ({
+    category,
+    resources: filteredResources.filter(r => r.category === category)
+  })).filter(group => group.resources.length > 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Navigation />
-      
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">Study Resources</h1>
-          <p className="text-lg text-gray-600">
-            Community study groups and helpful resources for BCOM ITM students
-          </p>
+          <h1 className="text-4xl font-bold text-foreground mb-2">Student Resources</h1>
+          <p className="text-muted-foreground">Support services, learning platforms, and useful links</p>
         </div>
 
-        <Alert className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            <strong>Study Group Guidelines:</strong> Stay on topic, no uploading current assignment/exam questions,
-            quality over quantity, respect all contributors, and report issues to group admin.
-          </AlertDescription>
-        </Alert>
-
-        <div className="grid gap-6 mb-8">
-          <Card>
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Users className="h-6 w-6 text-blue-600" />
-                <CardTitle>NotebookLM Study Groups</CardTitle>
-              </div>
-              <CardDescription>
-                Collaborative AI-powered study notebooks for current modules
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3">
-                {notebookLMGroups.map((group) => (
-                  <a
-                    key={group.name}
-                    href={group.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all group"
-                  >
-                    <span className="font-medium text-gray-900 group-hover:text-blue-700">
-                      {group.name}
-                    </span>
-                    <ExternalLink className="h-5 w-5 text-gray-400 group-hover:text-blue-600" />
-                  </a>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <BookOpen className="h-6 w-6 text-green-600" />
-                <CardTitle>External Resources</CardTitle>
-              </div>
-              <CardDescription>
-                Official links and textbook resources
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3">
-                {externalResources.map((resource) => (
-                  <a
-                    key={resource.name}
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col p-4 border rounded-lg hover:bg-green-50 hover:border-green-300 transition-all group"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-gray-900 group-hover:text-green-700">
-                        {resource.name}
-                      </span>
-                      <ExternalLink className="h-5 w-5 text-gray-400 group-hover:text-green-600" />
-                    </div>
-                    <span className="text-sm text-gray-600">{resource.description}</span>
-                  </a>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mb-6">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search resources..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
+          </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Current Semester Timetable (November 2025)</CardTitle>
-            <CardDescription>OSA schedule for Year 2 modules</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {[
-                { module: 'Strategic Information Technology Management', date: '04-Nov-2025', time: '08:00-16:00' },
-                { module: 'Principles of Project Management', date: '07-Nov-2025', time: '08:00-16:00' },
-                { module: 'Principles of E-Commerce', date: '12-Nov-2025', time: '08:00-16:00' },
-                { module: 'Information Systems', date: '17-Nov-2025', time: '08:00-16:00' },
-              ].map((item) => (
-                <div key={item.module} className="flex flex-col md:flex-row md:items-center md:justify-between p-4 border rounded-lg bg-gradient-to-r from-purple-50 to-pink-50">
-                  <span className="font-medium text-gray-900 mb-2 md:mb-0">{item.module}</span>
-                  <div className="flex flex-col md:items-end">
-                    <span className="text-sm font-semibold text-purple-700">{item.date}</span>
-                    <span className="text-sm text-gray-600">{item.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Academic Support</CardTitle>
-            <CardDescription>Get help when you need it</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-1">Ask the Academic Platform</h3>
-                <p className="text-sm text-gray-600">Academic Faculty Support for module-related queries</p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-1">Library Services</h3>
-                <p className="text-sm text-gray-600">Access to digital library and research materials</p>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h3 className="font-semibold text-gray-900 mb-1">Module Guides</h3>
-                <p className="text-sm text-gray-600">Comprehensive guides for each module available on MANCOSAConnect</p>
+        <div className="space-y-8">
+          {groupedResources.map(({ category, resources }) => (
+            <div key={category}>
+              <h2 className="text-2xl font-bold text-foreground mb-4">{category}</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {resources.map(resource => (
+                  <Card key={resource.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-start justify-between gap-2">
+                        <span>{resource.name}</span>
+                        {resource.url && <ExternalLink className="h-4 w-4 text-muted-foreground flex-shrink-0" />}
+                      </CardTitle>
+                      {resource.details && <CardDescription>{resource.details}</CardDescription>}
+                    </CardHeader>
+                    {resource.url && (
+                      <CardContent>
+                        <a href={resource.url} target="_blank" rel="noopener noreferrer">
+                          <Button variant="outline" className="w-full">Visit Site <ExternalLink className="h-4 w-4 ml-2" /></Button>
+                        </a>
+                      </CardContent>
+                    )}
+                  </Card>
+                ))}
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 };

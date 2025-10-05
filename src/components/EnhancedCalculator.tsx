@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import DistinctionPanel from '@/components/DistinctionPanel';
 import {
   calculateModuleResult,
   calculateRequiredOSA,
@@ -34,6 +35,13 @@ const EnhancedCalculator: React.FC = () => {
     color: string;
   } | null>(null);
 
+  const [distinctionData, setDistinctionData] = useState<{
+    canAchieveDistinction: boolean;
+    canAchieveCondonedDistinction: boolean;
+    distinctionRequiredOSA?: number;
+    condonedDistinctionRequiredOSA?: number;
+  } | null>(null);
+
   useEffect(() => {
     const kcq = parseFloat(kcqScore) || 0;
     const caseStudy = parseFloat(caseStudyScore) || 0;
@@ -41,22 +49,45 @@ const EnhancedCalculator: React.FC = () => {
     // Check if KCQ and Case Study are valid
     if (kcq < 0 || kcq > KCQ_TOTAL || caseStudy < 0 || caseStudy > CASE_STUDY_TOTAL) {
       setResult(null);
+      setDistinctionData(null);
       return;
     }
 
-    // Build assessments array for centralized calculator
+    // Build assessments array for current result calculation
     const assessments: Assessment[] = [
       { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
       { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
       { id: 'osa', name: 'Online Summative Assessment', score: String(osaScore), outOf: String(OSA_TOTAL), weight: '60' }
     ];
 
-    // Use centralized calculation logic
+    // Use centralized calculation logic for current grade
     const calculationResult = calculateModuleResult(assessments);
     
     if (!calculationResult) {
       setResult(null);
+      setDistinctionData(null);
       return;
+    }
+
+    // Also calculate distinction scenarios (without OSA to get required values)
+    const assessmentsForScenarios: Assessment[] = [
+      { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
+      { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
+      { id: 'osa', name: 'Online Summative Assessment', score: '', outOf: String(OSA_TOTAL), weight: '60' }
+    ];
+    
+    const scenarioResult = calculateModuleResult(assessmentsForScenarios);
+    
+    // Store distinction data for the panel from scenario calculation
+    if (scenarioResult) {
+      setDistinctionData({
+        canAchieveDistinction: scenarioResult.canAchieveDistinction,
+        canAchieveCondonedDistinction: scenarioResult.canAchieveCondonedDistinction,
+        distinctionRequiredOSA: scenarioResult.distinctionRequiredOSA,
+        condonedDistinctionRequiredOSA: scenarioResult.condonedDistinctionRequiredOSA,
+      });
+    } else {
+      setDistinctionData(null);
     }
 
     // Map Classification to UI status
@@ -179,7 +210,7 @@ const EnhancedCalculator: React.FC = () => {
             Calculate your required OSA mark to pass or achieve distinction
           </p>
           <p className="text-xs text-blue-600 mt-2 font-medium">
-            ✓ Now using centralized calculation logic
+            ✓ Includes distinction scenario calculations
           </p>
         </div>
 
@@ -320,8 +351,16 @@ const EnhancedCalculator: React.FC = () => {
           </Card>
         )}
 
-        {/* Placeholder for future DistinctionPanel integration (Issue #15) */}
-        {/* DistinctionPanel will be integrated here to show distinction scenarios */}
+        {/* Show DistinctionPanel when we have distinction scenarios to display */}
+        {distinctionData && (distinctionData.distinctionRequiredOSA !== undefined || distinctionData.condonedDistinctionRequiredOSA !== undefined) && (
+          <DistinctionPanel
+            canAchieveDistinction={distinctionData.canAchieveDistinction}
+            canAchieveCondonedDistinction={distinctionData.canAchieveCondonedDistinction}
+            distinctionRequiredOSA={distinctionData.distinctionRequiredOSA}
+            condonedDistinctionRequiredOSA={distinctionData.condonedDistinctionRequiredOSA}
+            osaOutOf={OSA_TOTAL}
+          />
+        )}
 
         <Alert className="mt-6">
           <AlertDescription className="text-sm">

@@ -6,6 +6,17 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import {
+  calculateModuleResult,
+  calculateRequiredOSA,
+  calculateWeightedScore,
+  Classification,
+  PASS_RATE,
+  DISTINCTION_RATE,
+  OSA_SUBMINIMUM,
+  FORMATIVE_SUBMINIMUM,
+  type Assessment
+} from '@/lib/calculator';
 
 const EnhancedCalculator: React.FC = () => {
   const [kcqScore, setKcqScore] = useState<string>('7');
@@ -15,10 +26,6 @@ const EnhancedCalculator: React.FC = () => {
   const KCQ_TOTAL = 10;
   const CASE_STUDY_TOTAL = 30;
   const OSA_TOTAL = 100;
-  const PASS_THRESHOLD = 50;
-  const DISTINCTION_THRESHOLD = 75;
-  const FORMATIVE_SUBMINIMUM = 50;
-  const OSA_SUBMINIMUM = 30;
 
   const [result, setResult] = useState<{
     finalMark: number;
@@ -26,22 +33,6 @@ const EnhancedCalculator: React.FC = () => {
     message: string;
     color: string;
   } | null>(null);
-
-  const calculateFinalMark = (kcq: number, caseStudy: number, osa: number): number => {
-    // Formative Total = (KCQ + Case Study) / 40 × 40
-    const formativeTotal = ((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 40;
-    
-    // OSA Contribution = (OSA Mark / 100) × 60
-    const osaContribution = (osa / OSA_TOTAL) * 60;
-    
-    // Final Mark = Formative Total + OSA Contribution
-    return formativeTotal + osaContribution;
-  };
-
-  const checkSubminimums = (kcq: number, caseStudy: number, osa: number): boolean => {
-    const formativePercentage = ((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 100;
-    return formativePercentage >= FORMATIVE_SUBMINIMUM && osa >= OSA_SUBMINIMUM;
-  };
 
   useEffect(() => {
     const kcq = parseFloat(kcqScore) || 0;
@@ -53,55 +44,67 @@ const EnhancedCalculator: React.FC = () => {
       return;
     }
 
-    const formativePercentage = ((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 100;
+    // Build assessments array for centralized calculator
+    const assessments: Assessment[] = [
+      { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
+      { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
+      { id: 'osa', name: 'Online Summative Assessment', score: String(osaScore), outOf: String(OSA_TOTAL), weight: '60' }
+    ];
+
+    // Use centralized calculation logic
+    const calculationResult = calculateModuleResult(assessments);
     
-    // Check formative sub-minimum
-    if (formativePercentage < FORMATIVE_SUBMINIMUM) {
-      setResult({
-        finalMark: 0,
-        status: 'fail',
-        message: `Formative sub-minimum not met (${formativePercentage.toFixed(1)}% < 50%). Automatic fail regardless of OSA score.`,
-        color: 'text-red-600'
-      });
+    if (!calculationResult) {
+      setResult(null);
       return;
     }
 
-    const finalMark = calculateFinalMark(kcq, caseStudy, osaScore);
-    
-    // Check OSA sub-minimum
-    if (osaScore < OSA_SUBMINIMUM) {
-      setResult({
-        finalMark,
-        status: 'fail',
-        message: `OSA sub-minimum not met (${osaScore}% < 30%). You must score at least 30% on the OSA.`,
-        color: 'text-red-600'
-      });
-      return;
-    }
+    // Map Classification to UI status
+    let status: 'fail' | 'pass' | 'distinction' = 'fail';
+    let message = '';
+    let color = 'text-red-600';
 
-    // Check pass/fail/distinction
-    if (finalMark >= DISTINCTION_THRESHOLD) {
-      setResult({
-        finalMark,
-        status: 'distinction',
-        message: 'Distinction achieved! Excellent work! 🎉',
-        color: 'text-green-600'
-      });
-    } else if (finalMark >= PASS_THRESHOLD) {
-      setResult({
-        finalMark,
-        status: 'pass',
-        message: 'You are passing this module! 👍',
-        color: 'text-yellow-600'
-      });
+    // Check formative sub-minimum first
+    if (!calculationResult.meetsFormativeSubMinimum) {
+      const formativePercentage = (((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 100);
+      message = `Formative sub-minimum not met (${formativePercentage.toFixed(1)}% < 50%). Automatic fail regardless of OSA score.`;
+      color = 'text-red-600';
+      status = 'fail';
+    } else if (!calculationResult.meetsOSASubMinimum) {
+      // Check OSA sub-minimum
+      message = `OSA sub-minimum not met (${osaScore}% < 30%). You must score at least 30% on the OSA.`;
+      color = 'text-red-600';
+      status = 'fail';
     } else {
-      setResult({
-        finalMark,
-        status: 'fail',
-        message: 'Below passing threshold. You need a higher OSA score.',
-        color: 'text-red-600'
-      });
+      // Map classification to status
+      switch (calculationResult.classification) {
+        case Classification.DISTINCTION:
+          status = 'distinction';
+          message = 'Distinction achieved! Excellent work! 🎉';
+          color = 'text-green-600';
+          break;
+        case Classification.PASS:
+        case Classification.CONDONED_DISTINCTION:
+          status = 'pass';
+          message = 'You are passing this module! 👍';
+          color = 'text-yellow-600';
+          break;
+        case Classification.FAIL:
+        case Classification.CONDITION_NOT_MET:
+        default:
+          status = 'fail';
+          message = 'Below passing threshold. You need a higher OSA score.';
+          color = 'text-red-600';
+          break;
+      }
     }
+
+    setResult({
+      finalMark: calculationResult.finalGrade,
+      status,
+      message,
+      color
+    });
   }, [kcqScore, caseStudyScore, osaScore]);
 
   const calculateMinimumOsa = (target: 'pass' | 'distinction') => {
@@ -112,17 +115,24 @@ const EnhancedCalculator: React.FC = () => {
       return;
     }
 
-    const formativeTotal = ((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 40;
-    const targetMark = target === 'pass' ? PASS_THRESHOLD : DISTINCTION_THRESHOLD;
-    const osaNeeded = ((targetMark - formativeTotal) / 60) * 100;
+    // Build assessments array without OSA score to calculate what's needed
+    const assessments: Assessment[] = [
+      { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
+      { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
+      { id: 'osa', name: 'Online Summative Assessment', score: '', outOf: String(OSA_TOTAL), weight: '60' }
+    ];
 
-    // Ensure it meets OSA sub-minimum
-    const finalOsa = Math.max(osaNeeded, OSA_SUBMINIMUM);
+    // Calculate current weighted score
+    const { currentWeightedScore } = calculateWeightedScore(assessments.filter(a => a.id !== 'osa'));
     
-    if (finalOsa > 100) {
+    // Use centralized function to calculate required OSA
+    const targetGrade = target === 'pass' ? PASS_RATE : DISTINCTION_RATE;
+    const required = calculateRequiredOSA(currentWeightedScore, 60, OSA_TOTAL, targetGrade);
+    
+    if (!required.achievable || required.percentage > 100) {
       setOsaScore(100);
     } else {
-      setOsaScore(Math.round(finalOsa));
+      setOsaScore(Math.max(Math.ceil(OSA_SUBMINIMUM), required.percentage));
     }
   };
 
@@ -167,6 +177,9 @@ const EnhancedCalculator: React.FC = () => {
           </p>
           <p className="text-sm text-gray-500">
             Calculate your required OSA mark to pass or achieve distinction
+          </p>
+          <p className="text-xs text-blue-600 mt-2 font-medium">
+            ✓ Now using centralized calculation logic
           </p>
         </div>
 
@@ -306,6 +319,9 @@ const EnhancedCalculator: React.FC = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Placeholder for future DistinctionPanel integration (Issue #15) */}
+        {/* DistinctionPanel will be integrated here to show distinction scenarios */}
 
         <Alert className="mt-6">
           <AlertDescription className="text-sm">

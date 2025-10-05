@@ -15,8 +15,10 @@ import {
   DISTINCTION_RATE,
   OSA_SUBMINIMUM,
   FORMATIVE_SUBMINIMUM,
-  type Assessment
+  type Assessment,
+  type CalculationResult
 } from '@/lib/calculator';
+import DistinctionPanel from './DistinctionPanel';
 
 const EnhancedCalculator: React.FC = () => {
   const [kcqScore, setKcqScore] = useState<string>('7');
@@ -34,49 +36,46 @@ const EnhancedCalculator: React.FC = () => {
     color: string;
   } | null>(null);
 
+  // Holds scenario calculation WITHOUT an entered OSA score so we can show required targets
+  const [scenarioResult, setScenarioResult] = useState<CalculationResult | null>(null);
+
+  // Recalculate main displayed result whenever any score changes
   useEffect(() => {
     const kcq = parseFloat(kcqScore) || 0;
     const caseStudy = parseFloat(caseStudyScore) || 0;
 
-    // Check if KCQ and Case Study are valid
     if (kcq < 0 || kcq > KCQ_TOTAL || caseStudy < 0 || caseStudy > CASE_STUDY_TOTAL) {
       setResult(null);
       return;
     }
 
-    // Build assessments array for centralized calculator
     const assessments: Assessment[] = [
       { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
       { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
       { id: 'osa', name: 'Online Summative Assessment', score: String(osaScore), outOf: String(OSA_TOTAL), weight: '60' }
     ];
 
-    // Use centralized calculation logic
     const calculationResult = calculateModuleResult(assessments);
-    
+
     if (!calculationResult) {
       setResult(null);
       return;
     }
 
-    // Map Classification to UI status
     let status: 'fail' | 'pass' | 'distinction' = 'fail';
     let message = '';
     let color = 'text-red-600';
 
-    // Check formative sub-minimum first
     if (!calculationResult.meetsFormativeSubMinimum) {
       const formativePercentage = (((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 100);
       message = `Formative sub-minimum not met (${formativePercentage.toFixed(1)}% < 50%). Automatic fail regardless of OSA score.`;
       color = 'text-red-600';
       status = 'fail';
     } else if (!calculationResult.meetsOSASubMinimum) {
-      // Check OSA sub-minimum
       message = `OSA sub-minimum not met (${osaScore}% < 30%). You must score at least 30% on the OSA.`;
       color = 'text-red-600';
       status = 'fail';
     } else {
-      // Map classification to status
       switch (calculationResult.classification) {
         case Classification.DISTINCTION:
           status = 'distinction';
@@ -107,6 +106,24 @@ const EnhancedCalculator: React.FC = () => {
     });
   }, [kcqScore, caseStudyScore, osaScore]);
 
+  // Recalculate scenario (targets) only when formative scores change
+  useEffect(() => {
+    const kcq = parseFloat(kcqScore) || 0;
+    const caseStudy = parseFloat(caseStudyScore) || 0;
+    if (kcq < 0 || kcq > KCQ_TOTAL || caseStudy < 0 || caseStudy > CASE_STUDY_TOTAL) {
+      setScenarioResult(null);
+      return;
+    }
+    const scenarioAssessments: Assessment[] = [
+      { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
+      { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
+      // blank OSA score so calculator returns required percentages
+      { id: 'osa', name: 'Online Summative Assessment', score: '', outOf: String(OSA_TOTAL), weight: '60' }
+    ];
+    const sr = calculateModuleResult(scenarioAssessments);
+    setScenarioResult(sr);
+  }, [kcqScore, caseStudyScore]);
+
   const calculateMinimumOsa = (target: 'pass' | 'distinction') => {
     const kcq = parseFloat(kcqScore) || 0;
     const caseStudy = parseFloat(caseStudyScore) || 0;
@@ -115,20 +132,17 @@ const EnhancedCalculator: React.FC = () => {
       return;
     }
 
-    // Build assessments array without OSA score to calculate what's needed
     const assessments: Assessment[] = [
       { id: 'kcq', name: 'Knowledge Check Quiz', score: kcqScore, outOf: String(KCQ_TOTAL), weight: '10' },
       { id: 'case-study', name: 'Case Study', score: caseStudyScore, outOf: String(CASE_STUDY_TOTAL), weight: '30' },
       { id: 'osa', name: 'Online Summative Assessment', score: '', outOf: String(OSA_TOTAL), weight: '60' }
     ];
 
-    // Calculate current weighted score
     const { currentWeightedScore } = calculateWeightedScore(assessments.filter(a => a.id !== 'osa'));
-    
-    // Use centralized function to calculate required OSA
+
     const targetGrade = target === 'pass' ? PASS_RATE : DISTINCTION_RATE;
     const required = calculateRequiredOSA(currentWeightedScore, 60, OSA_TOTAL, targetGrade);
-    
+
     if (!required.achievable || required.percentage > 100) {
       setOsaScore(100);
     } else {
@@ -138,7 +152,6 @@ const EnhancedCalculator: React.FC = () => {
 
   const getStatusIcon = () => {
     if (!result) return null;
-    
     switch (result.status) {
       case 'distinction':
       case 'pass':
@@ -152,7 +165,6 @@ const EnhancedCalculator: React.FC = () => {
 
   const getBackgroundColor = () => {
     if (!result) return 'bg-gray-50';
-    
     switch (result.status) {
       case 'distinction':
         return 'bg-green-50 border-green-200';
@@ -179,7 +191,7 @@ const EnhancedCalculator: React.FC = () => {
             Calculate your required OSA mark to pass or achieve distinction
           </p>
           <p className="text-xs text-blue-600 mt-2 font-medium">
-            ✓ Now using centralized calculation logic
+            ✓ Now using centralized calculation logic + distinction panel
           </p>
         </div>
 
@@ -208,7 +220,6 @@ const EnhancedCalculator: React.FC = () => {
                   <span className="text-gray-600 whitespace-nowrap">/ {KCQ_TOTAL}</span>
                 </div>
               </div>
-              
               <div className="space-y-2">
                 <Label htmlFor="caseStudy">Case Study / Assignment</Label>
                 <div className="flex items-center gap-2">
@@ -244,7 +255,6 @@ const EnhancedCalculator: React.FC = () => {
                   {osaScore}%
                 </span>
               </div>
-              
               <Slider
                 value={[osaScore]}
                 onValueChange={(value) => setOsaScore(value[0])}
@@ -253,14 +263,12 @@ const EnhancedCalculator: React.FC = () => {
                 step={1}
                 className="py-4"
               />
-              
               <div className="flex justify-between text-sm text-gray-500">
                 <span>0%</span>
                 <span>50%</span>
                 <span>100%</span>
               </div>
             </div>
-
             <div className="grid md:grid-cols-2 gap-3">
               <Button
                 onClick={() => calculateMinimumOsa('pass')}
@@ -269,7 +277,6 @@ const EnhancedCalculator: React.FC = () => {
               >
                 Calculate Min to Pass (50%)
               </Button>
-              
               <Button
                 onClick={() => calculateMinimumOsa('distinction')}
                 variant="outline"
@@ -282,23 +289,21 @@ const EnhancedCalculator: React.FC = () => {
         </Card>
 
         {result && (
-          <Card className={`border-2 ${getBackgroundColor()}`}>
+          <Card className={`border-2 ${getBackgroundColor()}`}> 
             <CardContent className="pt-6">
               <div className="text-center space-y-4">
                 <div className="flex justify-center">
                   {getStatusIcon()}
                 </div>
-                
                 <div>
                   <p className="text-sm text-gray-600 mb-2">Your Final Mark</p>
                   <p className="text-5xl font-bold text-gray-900 mb-2">
                     {result.finalMark.toFixed(1)}%
                   </p>
-                  <p className={`text-lg font-semibold ${result.color}`}>
+                  <p className={`text-lg font-semibold ${result.color}`}> 
                     {result.message}
                   </p>
                 </div>
-
                 <div className="grid grid-cols-3 gap-4 pt-4 border-t">
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Pass Threshold</p>
@@ -306,9 +311,7 @@ const EnhancedCalculator: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Your Mark</p>
-                    <p className={`text-lg font-semibold ${result.color}`}>
-                      {result.finalMark.toFixed(1)}%
-                    </p>
+                    <p className={`text-lg font-semibold ${result.color}`}>{result.finalMark.toFixed(1)}%</p>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Distinction</p>
@@ -320,8 +323,15 @@ const EnhancedCalculator: React.FC = () => {
           </Card>
         )}
 
-        {/* Placeholder for future DistinctionPanel integration (Issue #15) */}
-        {/* DistinctionPanel will be integrated here to show distinction scenarios */}
+        {scenarioResult && (
+          <DistinctionPanel
+            canAchieveDistinction={scenarioResult.canAchieveDistinction}
+            canAchieveCondonedDistinction={scenarioResult.canAchieveCondonedDistinction}
+            distinctionRequiredOSA={scenarioResult.distinctionRequiredOSA}
+            condonedDistinctionRequiredOSA={scenarioResult.condonedDistinctionRequiredOSA}
+            osaOutOf={OSA_TOTAL}
+          />
+        )}
 
         <Alert className="mt-6">
           <AlertDescription className="text-sm">

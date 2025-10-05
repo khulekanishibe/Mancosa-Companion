@@ -20,7 +20,12 @@ const ModuleCalculator: React.FC = () => {
   ]);
 
   const [errors, setErrors] = useState<Record<string, boolean>>({});
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{
+    type: string;
+    title: string;
+    content: string;
+    details?: string[];
+  } | null>(null);
   const [showResult, setShowResult] = useState(false);
 
   const PASS_RATE = 50;
@@ -198,7 +203,7 @@ const ModuleCalculator: React.FC = () => {
                  <p class="text-gray-600">(A raw mark of <strong>${(OSA_SUBMINIMUM / 100 * finalAssessmentOutOf).toFixed(2)} / ${finalAssessmentOutOf}</strong> on the <strong>${finalAssessmentName}</strong>)</p>`
       });
     } else {
-      let requiredPercent = (pointsNeeded / finalAssessmentWeight) * 100;
+      const requiredPercent = (pointsNeeded / finalAssessmentWeight) * 100;
 
       if (requiredPercent < OSA_SUBMINIMUM) {
         const finalGradeWithSubminimum = currentWeightedScore + (OSA_SUBMINIMUM / 100 * finalAssessmentWeight);

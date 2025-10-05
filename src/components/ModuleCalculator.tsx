@@ -245,6 +245,14 @@ const ModuleCalculator: React.FC = () => {
           <p className="text-gray-600 text-lg">
             Enter your marks to see the score needed on your final assessment to pass, including all sub-minimum rules.
           </p>
+          <div className="mt-3">
+            <a
+              href="/assessments"
+              className="text-indigo-600 hover:text-indigo-700 text-sm font-medium hover:underline"
+            >
+              📚 Learn about Assessments & Marking →
+            </a>
+          </div>
         </div>
 
         {/* Assessment Headers (Desktop) */}

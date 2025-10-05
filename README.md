@@ -1,4 +1,29 @@
-# Welcome to your Lovable project
+# MANCOSA Student Companion App
+
+A comprehensive web application for MANCOSA Bachelor of Commerce in Information and Technology Management (BCOM ITM) students.
+
+## Features
+
+### 🧮 Interactive Mark Calculator
+- Real-time calculation with interactive slider for OSA marks
+- Quick calculation buttons for passing (50%) and distinction (75%) thresholds
+- Color-coded feedback (red/yellow/green) based on performance
+- Enforces all MANCOSA sub-minimum requirements:
+  - Formative Assessments (KCQ + Case Study): 50% minimum
+  - OSA: 30% minimum
+  - Overall: 50% to pass, 75% for distinction
+
+### 📚 Module Information Hub
+- Comprehensive information for all BCOM ITM modules
+- Year-by-year breakdown (Years 1, 2, and 3)
+- Module descriptions, credits, and assessment structures
+- Programme overview (NQF Level 7, 360 credits, 3 years)
+
+### 🌐 Study Resources
+- NotebookLM collaborative study groups for current modules
+- External textbook resources (Shesha Books, Discount Textbooks)
+- Current semester OSA timetable
+- Academic support resources and guidelines
 
 ## Project info
 

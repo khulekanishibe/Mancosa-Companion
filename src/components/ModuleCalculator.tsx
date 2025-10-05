@@ -21,7 +21,7 @@ const ModuleCalculator: React.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [result, setResult] = useState<{
-    type: 'success' | 'warning' | 'error' | 'info';
+    type: string;
     title: string;
     content: string;
     details?: string[];

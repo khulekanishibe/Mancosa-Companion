@@ -25,10 +25,14 @@ A comprehensive web application for MANCOSA Bachelor of Commerce in Information 
 - Current semester OSA timetable
 - Academic support resources and guidelines
 
-## Calculator Refactor (Oct 2025)
-The calculator logic is now fully unified in `src/lib/calculator.ts`. The legacy `ModuleCalculator` component was removed after parity verification (Issue #14). Upcoming enhancements:
-- Distinction strategy panel (Issue #15)
-- Policy-driven multi-year assessment model (Issue #21)
+### Legacy Component Removal
+The previous `ModuleCalculator.tsx` was removed in favor of the unified `EnhancedCalculator` + centralized logic in `src/lib/calculator.ts`. Distinction and condoned distinction scenarios now appear via `DistinctionPanel`.
+
+### TODOs for Emerald Theme Integration
+- **Brand Tokens & CSS**: Implement emerald theme tokens, gradients, and glow utilities in `src/styles/brand.css`.
+- **Shield/Mascot Component**: Integrate the `ShieldLogo.tsx` component into the main layout.
+- **Background Styling**: Apply a hex or subtle pattern background.
+- **Sidebar Theming**: Align the sidebar's theme with the new emerald branding.
 
 ## Project info
 

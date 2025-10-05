@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// TODO(branding): Apply emerald layout + hex background in Phase 1 branding PR.
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

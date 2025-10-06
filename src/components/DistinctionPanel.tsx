@@ -18,9 +18,9 @@ const DistinctionPanel: React.FC<DistinctionPanelProps> = ({
   osaOutOf,
 }) => {
   return (
-    <div className="mt-6 p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+    <div className="mt-6 p-6 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg border border-emerald-200 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
-        <Award className="h-6 w-6 text-purple-600" />
+        <Award className="h-6 w-6 text-emerald-600" />
         <h3 className="text-xl font-bold text-gray-800">Distinction Strategy</h3>
       </div>
 
@@ -47,8 +47,8 @@ const DistinctionPanel: React.FC<DistinctionPanelProps> = ({
                 <p className="text-sm text-gray-700 mb-2">
                   To achieve a distinction, you need to score at least:
                 </p>
-                <div className="bg-white rounded-md p-3 border border-purple-200">
-                  <p className="text-2xl font-bold text-purple-600">
+                <div className="bg-white rounded-md p-3 border border-emerald-200">
+                  <p className="text-2xl font-bold text-emerald-700">
                     {distinctionRequiredOSA}%
                   </p>
                   <p className="text-xs text-gray-600 mt-1">

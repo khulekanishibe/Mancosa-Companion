@@ -1,15 +1,18 @@
 /**
  * Centralized calculator logic for MANCOSA module assessments
  * Includes distinction and condoned distinction calculations
+ * 
+ * CALCULATION PRECEDENCE:
+ * 1. Formative sub-minimum check (50% required)
+ * 2. OSA sub-minimum check (30% required)
+ * 3. Final grade thresholds (50% pass, 70% condoned, 75% distinction)
+ * 
+ * All OSA calculations use ceiling rounding to ensure integer percentages.
  */
 
-export enum Classification {
-  FAIL = 'FAIL',
-  PASS = 'PASS',
-  DISTINCTION = 'DISTINCTION',
-  CONDONED_DISTINCTION = 'CONDONED_DISTINCTION',
-  CONDITION_NOT_MET = 'CONDITION_NOT_MET',
-}
+import { Classification, classify } from './classification';
+
+export { Classification };
 
 export interface Assessment {
   id: string;
@@ -95,7 +98,13 @@ export function calculateWeightedScore(assessments: Assessment[]): {
 
 /**
  * Calculate required OSA score to achieve target grade
- * Returns integer percentage as per OSA requirements
+ * 
+ * ROUNDING LOGIC:
+ * - Uses Math.ceil() to round up percentages (ensures passing threshold)
+ * - Raw marks also rounded up to prevent undershooting
+ * - Enforces OSA sub-minimum of 30%
+ * 
+ * @returns Object with percentage (ceiling), raw score (ceiling), and achievability flag
  */
 export function calculateRequiredOSA(
   currentWeightedScore: number,
@@ -132,29 +141,19 @@ export function calculateRequiredOSA(
 
 /**
  * Classify final module result
+ * @deprecated Use classify() from classification.ts instead
+ * Kept for backward compatibility
  */
 export function classifyResult(
   finalGrade: number,
   meetsFormativeSubMinimum: boolean,
   meetsOSASubMinimum: boolean
 ): Classification {
-  // Check sub-minimums first
-  if (!meetsFormativeSubMinimum || !meetsOSASubMinimum) {
-    return Classification.CONDITION_NOT_MET;
-  }
-
-  // Round to integer for classification
-  const gradeInt = Math.floor(finalGrade);
-
-  if (gradeInt >= DISTINCTION_RATE) {
-    return Classification.DISTINCTION;
-  } else if (gradeInt >= CONDONED_DISTINCTION_MINIMUM) {
-    return Classification.CONDONED_DISTINCTION;
-  } else if (gradeInt >= PASS_RATE) {
-    return Classification.PASS;
-  } else {
-    return Classification.FAIL;
-  }
+  return classify(finalGrade, meetsFormativeSubMinimum, meetsOSASubMinimum, {
+    pass: PASS_RATE,
+    distinction: DISTINCTION_RATE,
+    condonedMin: CONDONED_DISTINCTION_MINIMUM
+  });
 }
 
 /**

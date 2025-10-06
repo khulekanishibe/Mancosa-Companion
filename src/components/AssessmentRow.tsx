@@ -33,7 +33,7 @@ const AssessmentRow: React.FC<AssessmentRowProps> = ({
           type="text"
           value={assessment.name}
           onChange={(e) => onUpdate(assessment.id, 'name', e.target.value)}
-          className="w-full p-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+          className="w-full p-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
           placeholder="e.g., Midterm Exam"
         />
       </div>
@@ -45,8 +45,8 @@ const AssessmentRow: React.FC<AssessmentRowProps> = ({
           value={assessment.score}
           onChange={(e) => onUpdate(assessment.id, 'score', e.target.value)}
           step="0.01"
-          className={`w-full p-2 border rounded-md text-center focus:ring-2 focus:ring-indigo-500 transition-colors ${
-            errors[`${assessment.id}-score`] ? 'border-red-500' : 'border-gray-200 focus:border-indigo-500'
+          className={`w-full p-2 border rounded-md text-center focus:ring-2 focus:ring-emerald-500 transition-colors ${
+            errors[`${assessment.id}-score`] ? 'border-red-500' : 'border-gray-200 focus:border-emerald-500'
           }`}
           placeholder="Leave blank"
         />
@@ -58,8 +58,8 @@ const AssessmentRow: React.FC<AssessmentRowProps> = ({
           type="number"
           value={assessment.outOf}
           onChange={(e) => onUpdate(assessment.id, 'outOf', e.target.value)}
-          className={`w-full p-2 border rounded-md text-center focus:ring-2 focus:ring-indigo-500 transition-colors ${
-            errors[`${assessment.id}-outOf`] ? 'border-red-500' : 'border-gray-200 focus:border-indigo-500'
+          className={`w-full p-2 border rounded-md text-center focus:ring-2 focus:ring-emerald-500 transition-colors ${
+            errors[`${assessment.id}-outOf`] ? 'border-red-500' : 'border-gray-200 focus:border-emerald-500'
           }`}
           placeholder="e.g., 50"
         />
@@ -71,8 +71,8 @@ const AssessmentRow: React.FC<AssessmentRowProps> = ({
           type="number"
           value={assessment.weight}
           onChange={(e) => onUpdate(assessment.id, 'weight', e.target.value)}
-          className={`w-full p-2 border rounded-md text-center focus:ring-2 focus:ring-indigo-500 transition-colors ${
-            errors[`${assessment.id}-weight`] ? 'border-red-500' : 'border-gray-200 focus:border-indigo-500'
+          className={`w-full p-2 border rounded-md text-center focus:ring-2 focus:ring-emerald-500 transition-colors ${
+            errors[`${assessment.id}-weight`] ? 'border-red-500' : 'border-gray-200 focus:border-emerald-500'
           }`}
           placeholder="e.g., 20"
         />

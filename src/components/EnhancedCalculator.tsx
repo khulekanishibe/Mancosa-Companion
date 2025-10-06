@@ -11,13 +11,18 @@ import {
   calculateModuleResult,
   calculateRequiredOSA,
   calculateWeightedScore,
-  Classification,
   PASS_RATE,
   DISTINCTION_RATE,
   OSA_SUBMINIMUM,
   FORMATIVE_SUBMINIMUM,
   type Assessment
 } from '@/lib/calculator';
+import {
+  Classification,
+  CLASSIFICATION_STYLES,
+  getClassificationLabel,
+  getClassificationStyles
+} from '@/lib/classification';
 
 const EnhancedCalculator: React.FC = () => {
   const [kcqScore, setKcqScore] = useState<string>('7');
@@ -30,9 +35,8 @@ const EnhancedCalculator: React.FC = () => {
 
   const [result, setResult] = useState<{
     finalMark: number;
-    status: 'fail' | 'pass' | 'distinction';
+    classification: Classification;
     message: string;
-    color: string;
   } | null>(null);
 
   const [distinctionData, setDistinctionData] = useState<{
@@ -90,51 +94,40 @@ const EnhancedCalculator: React.FC = () => {
       setDistinctionData(null);
     }
 
-    // Map Classification to UI status
-    let status: 'fail' | 'pass' | 'distinction' = 'fail';
+    // Determine message and classification
     let message = '';
-    let color = 'text-red-600';
+    const classification = calculationResult.classification;
 
     // Check formative sub-minimum first
     if (!calculationResult.meetsFormativeSubMinimum) {
       const formativePercentage = (((kcq + caseStudy) / (KCQ_TOTAL + CASE_STUDY_TOTAL)) * 100);
       message = `Formative sub-minimum not met (${formativePercentage.toFixed(1)}% < 50%). Automatic fail regardless of OSA score.`;
-      color = 'text-red-600';
-      status = 'fail';
     } else if (!calculationResult.meetsOSASubMinimum) {
-      // Check OSA sub-minimum
       message = `OSA sub-minimum not met (${osaScore}% < 30%). You must score at least 30% on the OSA.`;
-      color = 'text-red-600';
-      status = 'fail';
     } else {
-      // Map classification to status
-      switch (calculationResult.classification) {
+      // Generate message based on classification
+      switch (classification) {
         case Classification.DISTINCTION:
-          status = 'distinction';
           message = 'Distinction achieved! Excellent work! 🎉';
-          color = 'text-green-600';
+          break;
+        case Classification.CONDONED_DISTINCTION:
+          message = 'Condoned distinction achieved! Great job! 🌟';
           break;
         case Classification.PASS:
-        case Classification.CONDONED_DISTINCTION:
-          status = 'pass';
           message = 'You are passing this module! 👍';
-          color = 'text-yellow-600';
           break;
         case Classification.FAIL:
         case Classification.CONDITION_NOT_MET:
         default:
-          status = 'fail';
           message = 'Below passing threshold. You need a higher OSA score.';
-          color = 'text-red-600';
           break;
       }
     }
 
     setResult({
       finalMark: calculationResult.finalGrade,
-      status,
-      message,
-      color
+      classification,
+      message
     });
   }, [kcqScore, caseStudyScore, osaScore]);
 
@@ -170,30 +163,21 @@ const EnhancedCalculator: React.FC = () => {
   const getStatusIcon = () => {
     if (!result) return null;
     
-    switch (result.status) {
-      case 'distinction':
-      case 'pass':
-        return <CheckCircle2 className="h-8 w-8 text-green-600" />;
-      case 'fail':
-        return <XCircle className="h-8 w-8 text-red-600" />;
-      default:
-        return <AlertTriangle className="h-8 w-8 text-yellow-600" />;
+    const classification = result.classification;
+    const iconClass = getClassificationStyles(classification).iconClassName;
+    
+    if (classification === Classification.FAIL || classification === Classification.CONDITION_NOT_MET) {
+      return <XCircle className={`h-8 w-8 ${iconClass}`} />;
+    } else if (classification === Classification.DISTINCTION) {
+      return <CheckCircle2 className={`h-8 w-8 ${iconClass}`} />;
+    } else {
+      return <CheckCircle2 className={`h-8 w-8 ${iconClass}`} />;
     }
   };
 
   const getBackgroundColor = () => {
     if (!result) return 'bg-gray-50';
-    
-    switch (result.status) {
-      case 'distinction':
-        return 'bg-green-50 border-green-200';
-      case 'pass':
-        return 'bg-yellow-50 border-yellow-200';
-      case 'fail':
-        return 'bg-red-50 border-red-200';
-      default:
-        return 'bg-gray-50';
-    }
+    return getClassificationStyles(result.classification).bgClassName;
   };
 
   return (
@@ -271,7 +255,7 @@ const EnhancedCalculator: React.FC = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Label>OSA Score</Label>
-                <span className="text-3xl font-bold text-green-600">
+                <span className="text-3xl font-bold text-emerald-600">
                   {osaScore}%
                 </span>
               </div>
@@ -296,7 +280,7 @@ const EnhancedCalculator: React.FC = () => {
               <Button
                 onClick={() => calculateMinimumOsa('pass')}
                 variant="outline"
-                className="w-full border-green-600 text-green-700 hover:bg-green-50"
+                className="w-full border-emerald-600 text-emerald-700 hover:bg-emerald-50"
               >
                 Calculate Min to Pass (50%)
               </Button>
@@ -304,7 +288,7 @@ const EnhancedCalculator: React.FC = () => {
               <Button
                 onClick={() => calculateMinimumOsa('distinction')}
                 variant="outline"
-                className="w-full border-blue-600 text-blue-700 hover:bg-blue-50"
+                className="w-full border-emerald-700 text-emerald-800 hover:bg-emerald-50"
               >
                 Calculate for Distinction (75%)
               </Button>
@@ -325,7 +309,10 @@ const EnhancedCalculator: React.FC = () => {
                   <p className="text-5xl font-bold text-gray-900 mb-2">
                     {result.finalMark.toFixed(1)}%
                   </p>
-                  <p className={`text-lg font-semibold ${result.color}`}>
+                  <p className={`text-xl font-bold mb-1 ${getClassificationStyles(result.classification).className}`}>
+                    {getClassificationLabel(result.classification)}
+                  </p>
+                  <p className="text-base text-gray-700">
                     {result.message}
                   </p>
                 </div>
@@ -337,7 +324,7 @@ const EnhancedCalculator: React.FC = () => {
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-gray-500 mb-1">Your Mark</p>
-                    <p className={`text-lg font-semibold ${result.color}`}>
+                    <p className={`text-lg font-semibold ${getClassificationStyles(result.classification).className}`}>
                       {result.finalMark.toFixed(1)}%
                     </p>
                   </div>

@@ -29,16 +29,16 @@ export interface Theme {
 export const lightTheme: Theme = {
   name: 'light',
   colors: {
-    primary: 'hsl(239, 84%, 67%)', // Indigo
-    secondary: 'hsl(270, 95%, 75%)', // Purple
-    accent: 'hsl(280, 85%, 70%)',
+    primary: 'hsl(158, 64%, 52%)', // Emerald
+    secondary: 'hsl(160, 84%, 39%)', // Emerald Dark
+    accent: 'hsl(152, 76%, 60%)',
     background: 'hsl(0, 0%, 100%)',
     foreground: 'hsl(222.2, 84%, 4.9%)',
     muted: 'hsl(210, 40%, 96.1%)',
     mutedForeground: 'hsl(215.4, 16.3%, 46.9%)',
     border: 'hsl(214.3, 31.8%, 91.4%)',
     input: 'hsl(214.3, 31.8%, 91.4%)',
-    ring: 'hsl(239, 84%, 67%)',
+    ring: 'hsl(158, 64%, 52%)',
     success: 'hsl(142, 76%, 36%)',
     warning: 'hsl(38, 92%, 50%)',
     error: 'hsl(0, 84%, 60%)',
@@ -50,16 +50,16 @@ export const lightTheme: Theme = {
 export const darkTheme: Theme = {
   name: 'dark',
   colors: {
-    primary: 'hsl(239, 84%, 67%)',
-    secondary: 'hsl(270, 95%, 75%)',
-    accent: 'hsl(280, 85%, 70%)',
+    primary: 'hsl(158, 64%, 52%)', // Emerald
+    secondary: 'hsl(160, 84%, 39%)', // Emerald Dark
+    accent: 'hsl(152, 76%, 60%)',
     background: 'hsl(222.2, 84%, 4.9%)',
     foreground: 'hsl(210, 40%, 98%)',
     muted: 'hsl(217.2, 32.6%, 17.5%)',
     mutedForeground: 'hsl(215, 20.2%, 65.1%)',
     border: 'hsl(217.2, 32.6%, 17.5%)',
     input: 'hsl(217.2, 32.6%, 17.5%)',
-    ring: 'hsl(239, 84%, 67%)',
+    ring: 'hsl(158, 64%, 52%)',
     success: 'hsl(142, 76%, 36%)',
     warning: 'hsl(38, 92%, 50%)',
     error: 'hsl(0, 84%, 60%)',
@@ -82,10 +82,10 @@ export const classificationColors = {
     icon: 'text-green-600',
   },
   DISTINCTION: {
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    text: 'text-purple-600',
-    icon: 'text-purple-600',
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-200',
+    text: 'text-emerald-700',
+    icon: 'text-emerald-700',
   },
   CONDONED_DISTINCTION: {
     bg: 'bg-blue-50',

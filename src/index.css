@@ -6,51 +6,54 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Emerald/Teal Dark Theme */
+    --background: 168 45% 20%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 168 35% 25%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 168 40% 22%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 168 30% 30%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 168 30% 35%;
+    --muted-foreground: 168 10% 70%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 142 70% 45%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 168 25% 35%;
+    --input: 168 30% 30%;
+    --ring: 142 76% 36%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    /* Emerald neon for distinction/success */
+    --emerald-neon: 142 76% 50%;
+    --emerald-neon-soft: 142 60% 55%;
+    --emerald-light: 142 70% 65%;
+    
+    /* Gradient stops */
+    --gradient-from: 142 76% 36%;
+    --gradient-to: 142 60% 50%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 168 50% 18%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 142 76% 36%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 168 35% 28%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 168 30% 25%;
+    --sidebar-ring: 142 76% 36%;
   }
 
   .dark {
@@ -99,5 +102,62 @@
 
   body {
     @apply bg-background text-foreground;
+    background-image: 
+      repeating-linear-gradient(
+        30deg,
+        transparent,
+        transparent 20px,
+        hsl(var(--background)) 20px,
+        hsl(var(--background)) 40px
+      ),
+      repeating-linear-gradient(
+        -30deg,
+        transparent,
+        transparent 20px,
+        hsl(var(--muted) / 0.1) 20px,
+        hsl(var(--muted) / 0.1) 40px
+      );
+  }
+}
+
+@layer components {
+  .hex-pattern {
+    background-image: 
+      repeating-linear-gradient(
+        30deg,
+        transparent,
+        transparent 30px,
+        hsl(var(--muted) / 0.15) 30px,
+        hsl(var(--muted) / 0.15) 60px
+      ),
+      repeating-linear-gradient(
+        -30deg,
+        transparent,
+        transparent 30px,
+        hsl(var(--muted) / 0.15) 30px,
+        hsl(var(--muted) / 0.15) 60px
+      );
+  }
+
+  .neon-text {
+    color: hsl(var(--emerald-neon));
+    text-shadow: 
+      0 0 10px hsl(var(--emerald-neon) / 0.5),
+      0 0 20px hsl(var(--emerald-neon) / 0.3);
+  }
+
+  .card-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--gradient-from)),
+      hsl(var(--gradient-to))
+    );
+  }
+
+  .circular-button {
+    @apply w-24 h-24 rounded-full flex flex-col items-center justify-center;
+    @apply border-2 border-primary/50 bg-card/50 backdrop-blur-sm;
+    @apply hover:bg-primary/20 hover:border-primary transition-all duration-300;
+    @apply cursor-pointer;
   }
 }

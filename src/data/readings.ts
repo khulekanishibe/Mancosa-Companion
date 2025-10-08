@@ -15,163 +15,171 @@ export interface Reading {
 }
 
 export const READINGS: Reading[] = [
-  // Year 1 - Programming
+  // Year 1, Semester 1 - Business Management
+  {
+    id: 'READ-CONTEMP-MGMT',
+    moduleCodes: ['IBM5'],
+    type: 'PRESCRIBED',
+    title: 'Contemporary Management',
+    authors: 'Jones, G.R. & George, J.M.',
+    edition: '12th',
+    year: 2022,
+    publisher: 'McGraw-Hill',
+    isbn: '9781260735154'
+  },
+  {
+    id: 'READ-MGMT-PRINCIPLES',
+    moduleCodes: ['IBM5'],
+    type: 'PRESCRIBED',
+    title: 'Management Principles',
+    authors: 'Smit, P.J. et al.',
+    edition: '7th',
+    year: 2020,
+    publisher: 'Juta',
+    isbn: '9781485131007'
+  },
+  
+  // Year 1, Semester 1 - Programming
   {
     id: 'READ-JAVA-PROG',
-    moduleCodes: ['FCP5', 'APC5'],
+    moduleCodes: ['FCP5'],
     type: 'PRESCRIBED',
     title: 'Java Programming',
     authors: 'Farrell, J.',
     edition: '10th',
     year: 2023,
-    publisher: 'Cengage'
-  },
-  {
-    id: 'READ-INTRO-PROG',
-    moduleCodes: ['FCP5'],
-    type: 'RECOMMENDED',
-    title: 'Introduction to Programming Using Java',
-    authors: 'Eck, D.J.',
-    edition: '9th',
-    year: 2022,
-    publisher: 'Self-published'
+    publisher: 'Cengage',
+    isbn: '9781337397070'
   },
   
-  // Year 1 - MIS
+  // Year 1, Semester 1 - Statistics
   {
-    id: 'READ-MIS-ESSENTIALS',
-    moduleCodes: ['MIS5', 'BIS5'],
+    id: 'READ-STATS-BUS-ECON',
+    moduleCodes: ['ANT5', 'ABS6'],
     type: 'PRESCRIBED',
-    title: 'Management Information Systems',
-    authors: 'Laudon, K.C. & Laudon, J.P.',
-    edition: '17th',
-    year: 2022,
-    publisher: 'Pearson'
+    title: 'Statistics For Business And Economics',
+    authors: 'Anderson, D.R., Sweeney, D.J. & Williams, T.A.',
+    edition: '5th',
+    year: 2020,
+    publisher: 'Cengage',
+    isbn: '9781473768451'
   },
   
-  // Year 2 - Database
+  // Year 1, Semester 1 - Economics
   {
-    id: 'READ-DATABASE-SYSTEMS',
-    moduleCodes: ['DDM6'],
+    id: 'READ-ECON-SA-STUDENTS',
+    moduleCodes: ['MES5'],
     type: 'PRESCRIBED',
-    title: 'Database Systems: Design, Implementation, & Management',
-    authors: 'Coronel, C. & Morris, S.',
-    edition: '13th',
-    year: 2019,
-    publisher: 'Cengage'
+    title: 'Economics for South African Students',
+    authors: 'Mohr, P. & Fourie, L.',
+    edition: '6th',
+    year: 2020,
+    publisher: 'Van Schaik',
+    isbn: '9780627037054'
   },
+  
+  // Year 2, Semester 1 - IT Management
   {
-    id: 'READ-SQL-COOKBOOK',
-    moduleCodes: ['DDM6'],
-    type: 'RECOMMENDED',
-    title: 'SQL Cookbook',
-    authors: 'Molinaro, A.',
-    edition: '2nd',
+    id: 'READ-IT-MGMT',
+    moduleCodes: ['PITM6', 'SITM6', 'IFS6'],
+    type: 'PRESCRIBED',
+    title: 'Information Technology for Management',
+    authors: 'Turban, E., Pollard, C. & Wood, G.',
+    edition: '12th',
     year: 2021,
-    publisher: "O'Reilly"
+    publisher: 'Wiley',
+    isbn: '9781119702900'
   },
   
-  // Year 2 - SAD
+  // Year 2, Semester 1 - Database
   {
-    id: 'READ-SYSTEMS-ANALYSIS',
-    moduleCodes: ['SAD6'],
+    id: 'READ-DATABASE-PRINCIPLES',
+    moduleCodes: ['DDM6'],
+    type: 'PRESCRIBED',
+    title: 'Database Principles: Fundamentals Of Design',
+    authors: 'Coronel, C., Morris, S. & Rob, P.',
+    edition: '3rd',
+    year: 2019,
+    publisher: 'Cengage',
+    isbn: '9781473768055'
+  },
+  
+  // Year 2, Semester 1 - Management Accounting
+  {
+    id: 'READ-COST-MGMT-ACCT',
+    moduleCodes: ['MAC6'],
+    type: 'PRESCRIBED',
+    title: 'Fundamentals of Cost and Management Accounting',
+    authors: 'De Villiers, R.R. & Stainbank, L.J.',
+    edition: '9th',
+    year: 2020,
+    publisher: 'LexisNexis',
+    isbn: '9780639009759'
+  },
+  
+  // Year 2, Semester 2 - Project Management
+  {
+    id: 'READ-PROJECT-MGMT',
+    moduleCodes: ['PPM6'],
+    type: 'PRESCRIBED',
+    title: 'Successful Project Management',
+    authors: 'Lock, D. & Wagner, R.',
+    edition: '2nd',
+    year: 2019,
+    publisher: 'Routledge',
+    isbn: '9781473780422'
+  },
+  
+  // Year 2, Semester 2 - E-Commerce
+  {
+    id: 'READ-ECOMMERCE',
+    moduleCodes: ['PEC6'],
+    type: 'PRESCRIBED',
+    title: 'E-Commerce: Business, Technology, Society',
+    authors: 'Laudon, K.C. & Traver, C.G.',
+    edition: '16th',
+    year: 2021,
+    publisher: 'Pearson',
+    isbn: '9780135727751'
+  },
+  
+  // Year 3, Semester 1 - Software Engineering
+  {
+    id: 'READ-SOFTWARE-ENG',
+    moduleCodes: ['PSE7'],
+    type: 'PRESCRIBED',
+    title: 'Engineering Software Products: An Introduction to Modern Software Engineering',
+    authors: 'Sommerville, I.',
+    edition: '1st',
+    year: 2020,
+    publisher: 'Pearson',
+    isbn: '9781292376349'
+  },
+  
+  // Year 3, Semester 1 - Auditing
+  {
+    id: 'READ-AUDITING-SA',
+    moduleCodes: ['AUD7'],
+    type: 'PRESCRIBED',
+    title: 'Auditing Notes for South African Students',
+    authors: 'Marx, B. et al.',
+    edition: '11th',
+    year: 2021,
+    publisher: 'LexisNexis',
+    isbn: '9780639008622'
+  },
+  
+  // Year 3, Semester 1 - Systems Analysis
+  {
+    id: 'READ-SYSTEMS-ANALYSIS-DESIGN',
+    moduleCodes: ['SAD7'],
     type: 'PRESCRIBED',
     title: 'Systems Analysis and Design',
-    authors: 'Tilley, S. & Rosenblatt, H.',
-    edition: '12th',
-    year: 2020,
-    publisher: 'Cengage'
-  },
-  
-  // Year 2 - Strategic IT
-  {
-    id: 'READ-STRATEGIC-IT',
-    moduleCodes: ['SITM6'],
-    type: 'PRESCRIBED',
-    title: 'Strategic Management of Information Systems',
-    authors: 'Peppard, J. & Ward, J.',
-    edition: '5th',
-    year: 2016,
-    publisher: 'Wiley'
-  },
-  
-  // Year 2 - Web Development
-  {
-    id: 'READ-WEB-DESIGN',
-    moduleCodes: ['WDD6'],
-    type: 'PRESCRIBED',
-    title: 'HTML and CSS: Design and Build Websites',
-    authors: 'Duckett, J.',
-    year: 2011,
-    publisher: 'Wiley'
-  },
-  {
-    id: 'READ-JS-DEFINITIVE',
-    moduleCodes: ['WDD6'],
-    type: 'RECOMMENDED',
-    title: 'JavaScript: The Definitive Guide',
-    authors: 'Flanagan, D.',
-    edition: '7th',
-    year: 2020,
-    publisher: "O'Reilly"
-  },
-  
-  // Year 3 - Governance
-  {
-    id: 'READ-IT-GOVERNANCE',
-    moduleCodes: ['ISG7'],
-    type: 'PRESCRIBED',
-    title: 'IT Governance: An International Guide to Data Security and ISO27001/ISO27002',
-    authors: 'Calder, A.',
-    edition: '6th',
-    year: 2016,
-    publisher: 'Kogan Page'
-  },
-  
-  // Year 3 - ERP
-  {
-    id: 'READ-ERP-SYSTEMS',
-    moduleCodes: ['ERP7'],
-    type: 'PRESCRIBED',
-    title: 'Enterprise Resource Planning',
-    authors: 'Monk, E. & Wagner, B.',
-    edition: '3rd',
-    year: 2013,
-    publisher: 'Cengage'
-  },
-  
-  // Year 3 - BI & Analytics
-  {
-    id: 'READ-BI-DATA-WAREHOUSE',
-    moduleCodes: ['BIA7'],
-    type: 'PRESCRIBED',
-    title: 'Business Intelligence, Analytics, and Data Science',
-    authors: 'Sharda, R., Delen, D. & Turban, E.',
-    edition: '4th',
-    year: 2018,
-    publisher: 'Pearson'
-  },
-  
-  // Year 3 - Project Management
-  {
-    id: 'READ-IT-PROJECT-MGMT',
-    moduleCodes: ['ITPM7'],
-    type: 'PRESCRIBED',
-    title: 'Information Technology Project Management',
-    authors: 'Schwalbe, K.',
-    edition: '9th',
+    authors: 'Kendall, K.E. & Kendall, J.E.',
+    edition: '10th',
     year: 2019,
-    publisher: 'Cengage'
-  },
-  {
-    id: 'READ-PMBOK',
-    moduleCodes: ['ITPM7'],
-    type: 'RECOMMENDED',
-    title: 'A Guide to the Project Management Body of Knowledge (PMBOK Guide)',
-    authors: 'Project Management Institute',
-    edition: '7th',
-    year: 2021,
-    publisher: 'PMI'
+    publisher: 'Pearson',
+    isbn: '9780134785554'
   }
 ];
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Calculator, BookOpen, HelpCircle, Library, Info } from 'lucide-react';
+import { Calculator, BookOpen, HelpCircle, Library, Info, GraduationCap } from 'lucide-react';
 
 const Navigation = () => {
   const location = useLocation();
@@ -8,6 +8,7 @@ const Navigation = () => {
   
   const navItems = [
     { path: '/assessments', label: 'Calculator', icon: Calculator },
+    { path: '/programmes', label: 'Programmes', icon: GraduationCap },
     { path: '/modules', label: 'Modules', icon: BookOpen },
     { path: '/readings', label: 'Readings', icon: Library },
     { path: '/resources', label: 'Resources', icon: HelpCircle },

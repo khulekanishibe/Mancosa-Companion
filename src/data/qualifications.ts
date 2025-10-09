@@ -13,6 +13,8 @@ export interface Qualification {
   duration_years: number;
   faculty: string;
   description: string;
+  coordinator?: string;
+  school?: string;
   career_outcomes?: string[];
   entry_requirements?: string;
 }
@@ -29,6 +31,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 1,
     faculty: 'Business Management',
     description: 'Foundation qualification providing essential business management skills and knowledge',
+    coordinator: 'Bandile Gqala & Cheri Nieman',
+    school: 'School of Business Excellence',
     career_outcomes: [
       'Junior Management Positions',
       'Administrative Roles',
@@ -46,6 +50,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 1,
     faculty: 'Business Management',
     description: 'Specialized certificate focusing on project management fundamentals and practices',
+    coordinator: 'Sipho Hlatshwayo & Zizipho Gamnca',
+    school: 'School of Project Management',
     career_outcomes: [
       'Project Coordinator',
       'Assistant Project Manager',
@@ -65,6 +71,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 3,
     faculty: 'Information Technology',
     description: 'Comprehensive degree combining business acumen with IT management skills, preparing graduates for leadership roles in technology-driven organizations',
+    coordinator: 'Thabisile Nala',
+    school: 'School of Information and Digital Technology',
     career_outcomes: [
       'IT Manager',
       'Systems Analyst',
@@ -85,6 +93,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 3,
     faculty: 'Accounting and Finance',
     description: 'Professional accounting qualification covering financial accounting, management accounting, and auditing',
+    coordinator: 'Zwelihle Mkhize & Sithokozile Mbhele',
+    school: 'School of Accounting, Finance, and Tax Administration',
     career_outcomes: [
       'Accountant',
       'Financial Manager',
@@ -104,6 +114,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 3,
     faculty: 'Business Management',
     description: 'Versatile business degree covering all functional areas of business management',
+    coordinator: 'Bandile Gqala & Cheri Nieman',
+    school: 'School of Business Excellence',
     career_outcomes: [
       'Business Manager',
       'Operations Manager',
@@ -125,6 +137,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 1,
     faculty: 'Information Technology',
     description: 'Advanced IT management qualification focusing on information security, governance, and strategic IT planning',
+    coordinator: 'Thabisile Nala',
+    school: 'School of Information and Digital Technology',
     career_outcomes: [
       'Senior IT Manager',
       'IT Security Manager',
@@ -146,6 +160,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 1,
     faculty: 'Business Management',
     description: 'Advanced business management qualification with research component',
+    coordinator: 'Bandile Gqala & Cheri Nieman',
+    school: 'School of Business Excellence',
     career_outcomes: [
       'Senior Business Manager',
       'Strategy Consultant',
@@ -166,6 +182,8 @@ export const QUALIFICATIONS: Qualification[] = [
     duration_years: 2,
     faculty: 'Business Management',
     description: 'Premier business leadership qualification developing strategic thinking and executive management capabilities',
+    coordinator: 'Bandile Gqala & Cheri Nieman',
+    school: 'School of Business Excellence',
     career_outcomes: [
       'Chief Executive Officer',
       'Chief Operating Officer',

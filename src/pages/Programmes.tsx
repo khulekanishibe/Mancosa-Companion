@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { GraduationCap, Search, BookOpen, Briefcase, Award } from 'lucide-react';
+import { GraduationCap, Search, BookOpen, Briefcase, Award, UserCheck } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const Programmes = () => {
@@ -44,6 +44,16 @@ const Programmes = () => {
         <p className="text-sm text-muted-foreground mb-4">
           {qualification.description}
         </p>
+
+        {qualification.coordinator && (
+          <div className="flex items-center gap-2 mb-4 p-3 bg-muted/50 rounded-lg">
+            <UserCheck className="h-4 w-4 text-primary flex-shrink-0" />
+            <div className="text-sm">
+              <span className="font-medium text-muted-foreground">Academic Support:</span>{' '}
+              <span className="text-foreground">{qualification.coordinator}</span>
+            </div>
+          </div>
+        )}
 
         <Accordion type="single" collapsible className="w-full">
           {qualification.career_outcomes && qualification.career_outcomes.length > 0 && (

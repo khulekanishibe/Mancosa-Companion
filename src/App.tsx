@@ -9,6 +9,7 @@ import Programmes from "./pages/Programmes";
 import Modules from "./pages/Modules";
 import Readings from "./pages/Readings";
 import Resources from "./pages/Resources";
+import AcademicSupport from "./pages/AcademicSupport";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/modules" element={<Modules />} />
           <Route path="/readings" element={<Readings />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/academic-support" element={<AcademicSupport />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

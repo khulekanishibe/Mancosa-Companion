@@ -49,8 +49,7 @@ export const MODULES: Module[] = [
         title: 'Management Principles. Seventh Edition',
         isbn_ebook: '9781485131007'
       }
-    ],
-    notebook_link: 'https://drive.google.com/drive/folders/1QT57K7WD4A822kv_aRpBQIcO0TLmuX5D?usp=drive_link'
+    ]
   },
   { 
     code: 'FCP5', 

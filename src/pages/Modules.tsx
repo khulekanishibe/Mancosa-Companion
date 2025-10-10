@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Search } from 'lucide-react';
+import { BookOpen, Search, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Modules = () => {
@@ -21,8 +21,8 @@ const Modules = () => {
   const year3Modules = filteredModules.filter(m => m.year === 3);
 
   const ModuleCard = ({ module }: { module: typeof MODULES[0] }) => (
-    <Link to={`/modules/${module.code}`}>
-      <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+    <Card className="hover:shadow-lg transition-shadow">
+      <Link to={`/modules/${module.code}`}>
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -43,8 +43,23 @@ const Modules = () => {
             </p>
           )}
         </CardContent>
-      </Card>
-    </Link>
+      </Link>
+      {module.notebook_link && (
+        <CardContent className="pt-0">
+          <a 
+            href={module.notebook_link} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+          >
+            <BookOpen className="h-4 w-4" />
+            Study with NotebookLM
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        </CardContent>
+      )}
+    </Card>
   );
 
   return (

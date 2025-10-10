@@ -14,11 +14,13 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <img 
-            src={mascotLogo} 
-            alt="MANCOSA Student Hub" 
-            className="w-48 h-48 mx-auto mb-6 object-contain"
-          />
+          <div className="w-48 h-48 mx-auto mb-6 bg-gradient-to-br from-[#145A32] to-[#2ECC71] rounded-full p-4 flex items-center justify-center">
+            <img 
+              src={mascotLogo} 
+              alt="MANCOSA Student Hub" 
+              className="w-full h-full object-contain"
+            />
+          </div>
           <h1 className="text-4xl font-bold text-foreground mb-4">
             Welcome to MANCOSA Companion
           </h1>

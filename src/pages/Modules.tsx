@@ -5,15 +5,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Search, ExternalLink } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BookOpen, Search, ExternalLink, ArrowUpDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+type SortOption = 'code-asc' | 'code-desc' | 'title-asc' | 'title-desc' | 'credits-asc' | 'credits-desc';
 
 const Modules = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('code-asc');
 
-  const filteredModules = MODULES.filter(module =>
-    module.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    module.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const sortModules = (modules: typeof MODULES) => {
+    const sorted = [...modules];
+    switch (sortBy) {
+      case 'code-asc':
+        return sorted.sort((a, b) => a.code.localeCompare(b.code));
+      case 'code-desc':
+        return sorted.sort((a, b) => b.code.localeCompare(a.code));
+      case 'title-asc':
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case 'title-desc':
+        return sorted.sort((a, b) => b.title.localeCompare(a.title));
+      case 'credits-asc':
+        return sorted.sort((a, b) => a.credits - b.credits);
+      case 'credits-desc':
+        return sorted.sort((a, b) => b.credits - a.credits);
+      default:
+        return sorted;
+    }
+  };
+
+  const filteredModules = sortModules(
+    MODULES.filter(module =>
+      module.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (module.qualification?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+    )
   );
 
   const year1Modules = filteredModules.filter(m => m.year === 1);
@@ -31,11 +58,17 @@ const Modules = () => {
             </div>
             <Badge variant="outline">{module.credits} credits</Badge>
           </div>
+          {module.qualification && (
+            <Badge variant="secondary" className="mt-2 w-fit">
+              {module.qualification}
+            </Badge>
+          )}
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>Semester {module.semester}</span>
+          <div className="flex items-center gap-2 flex-wrap text-sm text-muted-foreground">
+            <span>Year {module.year}, Semester {module.semester}</span>
             {module.isCapstone && <Badge variant="secondary">Capstone</Badge>}
+            {module.module_type && <Badge variant="outline">{module.module_type}</Badge>}
           </div>
           {module.description && (
             <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
@@ -73,15 +106,34 @@ const Modules = () => {
           </p>
         </div>
 
-        <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by module code or title..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by module code, title, or qualification..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+              <SelectTrigger className="w-full sm:w-[220px]">
+                <ArrowUpDown className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Sort by..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="code-asc">Code (A-Z)</SelectItem>
+                <SelectItem value="code-desc">Code (Z-A)</SelectItem>
+                <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                <SelectItem value="credits-asc">Credits (Low-High)</SelectItem>
+                <SelectItem value="credits-desc">Credits (High-Low)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Showing {filteredModules.length} module{filteredModules.length !== 1 ? 's' : ''}
           </div>
         </div>
 

@@ -5,15 +5,41 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BookOpen, Search } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BookOpen, Search, ArrowUpDown } from 'lucide-react';
+
+type SortOption = 'title-asc' | 'title-desc' | 'author-asc' | 'author-desc' | 'year-asc' | 'year-desc';
 
 const Readings = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('title-asc');
 
-  const filteredReadings = READINGS.filter(reading =>
-    reading.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    reading.authors.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    reading.moduleCodes.some(code => code.toLowerCase().includes(searchQuery.toLowerCase()))
+  const sortReadings = (readings: typeof READINGS) => {
+    const sorted = [...readings];
+    switch (sortBy) {
+      case 'title-asc':
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case 'title-desc':
+        return sorted.sort((a, b) => b.title.localeCompare(a.title));
+      case 'author-asc':
+        return sorted.sort((a, b) => a.authors.localeCompare(b.authors));
+      case 'author-desc':
+        return sorted.sort((a, b) => b.authors.localeCompare(a.authors));
+      case 'year-asc':
+        return sorted.sort((a, b) => (a.year || 0) - (b.year || 0));
+      case 'year-desc':
+        return sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
+      default:
+        return sorted;
+    }
+  };
+
+  const filteredReadings = sortReadings(
+    READINGS.filter(reading =>
+      reading.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      reading.authors.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      reading.moduleCodes.some(code => code.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
   );
 
   const prescribedReadings = filteredReadings.filter(r => r.type === 'PRESCRIBED');
@@ -64,15 +90,34 @@ const Readings = () => {
           </p>
         </div>
 
-        <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by title, author, or module code..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by title, author, or module code..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+              <SelectTrigger className="w-full sm:w-[220px]">
+                <ArrowUpDown className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Sort by..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+                <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+                <SelectItem value="author-asc">Author (A-Z)</SelectItem>
+                <SelectItem value="author-desc">Author (Z-A)</SelectItem>
+                <SelectItem value="year-asc">Year (Old-New)</SelectItem>
+                <SelectItem value="year-desc">Year (New-Old)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Showing {filteredReadings.length} reading{filteredReadings.length !== 1 ? 's' : ''}
           </div>
         </div>
 

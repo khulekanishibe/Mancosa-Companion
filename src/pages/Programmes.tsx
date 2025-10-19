@@ -5,16 +5,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { GraduationCap, Search, BookOpen, Briefcase, Award, UserCheck } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { GraduationCap, Search, BookOpen, Briefcase, Award, UserCheck, ArrowUpDown } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+type SortOption = 'name-asc' | 'name-desc' | 'credits-asc' | 'credits-desc' | 'nqf-asc' | 'nqf-desc';
 
 const Programmes = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('name-asc');
 
-  const filteredQualifications = QUALIFICATIONS.filter(qual =>
-    qual.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    qual.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    qual.faculty.toLowerCase().includes(searchQuery.toLowerCase())
+  const sortQualifications = (quals: typeof QUALIFICATIONS) => {
+    const sorted = [...quals];
+    switch (sortBy) {
+      case 'name-asc':
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case 'name-desc':
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case 'credits-asc':
+        return sorted.sort((a, b) => a.total_credits - b.total_credits);
+      case 'credits-desc':
+        return sorted.sort((a, b) => b.total_credits - a.total_credits);
+      case 'nqf-asc':
+        return sorted.sort((a, b) => a.nqf_level - b.nqf_level);
+      case 'nqf-desc':
+        return sorted.sort((a, b) => b.nqf_level - a.nqf_level);
+      default:
+        return sorted;
+    }
+  };
+
+  const filteredQualifications = sortQualifications(
+    QUALIFICATIONS.filter(qual =>
+      qual.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      qual.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      qual.faculty.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
   const higherCerts = filteredQualifications.filter(q => q.level === 'Higher Certificate');
@@ -118,15 +144,34 @@ const Programmes = () => {
           </p>
         </div>
 
-        <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search programmes by name, faculty, or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        <div className="mb-6 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search programmes by name, faculty, or description..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+              <SelectTrigger className="w-full sm:w-[220px]">
+                <ArrowUpDown className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Sort by..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name-asc">Name (A-Z)</SelectItem>
+                <SelectItem value="name-desc">Name (Z-A)</SelectItem>
+                <SelectItem value="credits-asc">Credits (Low-High)</SelectItem>
+                <SelectItem value="credits-desc">Credits (High-Low)</SelectItem>
+                <SelectItem value="nqf-asc">NQF Level (Low-High)</SelectItem>
+                <SelectItem value="nqf-desc">NQF Level (High-Low)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Showing {filteredQualifications.length} programme{filteredQualifications.length !== 1 ? 's' : ''}
           </div>
         </div>
 

@@ -12,10 +12,129 @@
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
+
+    <style>
+      #preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+        transition: opacity 0.5s ease-out;
+      }
+
+      #preloader.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .preloader-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .animation-container {
+        width: 16rem;
+        height: 16rem;
+      }
+
+      @media (min-width: 768px) {
+        .animation-container {
+          width: 20rem;
+          height: 20rem;
+        }
+      }
+
+      .preloader-text {
+        text-align: center;
+      }
+
+      .preloader-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+      }
+
+      .preloader-subtitle {
+        color: #4b5563;
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .spinner {
+        width: 4rem;
+        height: 4rem;
+        border: 4px solid #2563eb;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
 
   <body>
+    <div id="preloader">
+      <div class="preloader-content">
+        <div class="animation-container" id="lottie-container"></div>
+        <div class="preloader-text">
+          <h2 class="preloader-title">MANCOSA Student Companion</h2>
+          <p class="preloader-subtitle">Loading your experience...</p>
+        </div>
+      </div>
+    </div>
+
     <div id="root"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script>
+      const preloader = document.getElementById('preloader');
+      const lottieContainer = document.getElementById('lottie-container');
+
+      fetch('/D_Mascot_Animation_Request.json')
+        .then(response => response.json())
+        .then(animationData => {
+          lottie.loadAnimation({
+            container: lottieContainer,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: animationData
+          });
+        })
+        .catch(error => {
+          console.error('Error loading animation:', error);
+          lottieContainer.innerHTML = '<div class="spinner"></div>';
+        });
+
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          preloader.classList.add('fade-out');
+          setTimeout(() => {
+            preloader.style.display = 'none';
+          }, 500);
+        }, 2500);
+      });
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

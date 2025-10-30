@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import Assessments from "./pages/Assessments";
 import Programmes from "./pages/Programmes";
 import Modules from "./pages/Modules";
+import Schedule from "./pages/Schedule";
+import Workspace from "./pages/Workspace";
 import Readings from "./pages/Readings";
 import Resources from "./pages/Resources";
 import AcademicSupport from "./pages/AcademicSupport";
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/programmes" element={<Programmes />} />
           <Route path="/modules" element={<Modules />} />
+          <Route path="/schedule" element={<Schedule />} />
+          <Route path="/workspace" element={<Workspace />} />
           <Route path="/readings" element={<Readings />} />
           <Route path="/resources" element={<Resources />} />
           <Route path="/academic-support" element={<AcademicSupport />} />

@@ -9,7 +9,7 @@ const AcademicSupport = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Navigation />
-      
+
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
@@ -56,7 +56,7 @@ const AcademicSupport = () => {
             <Users className="h-6 w-6 text-primary" />
             Meet Your Academic Support Coordinators
           </h2>
-          
+
           <div className="grid gap-6">
             {COORDINATORS.map((coordinator, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">

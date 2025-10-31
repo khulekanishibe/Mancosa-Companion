@@ -79,9 +79,9 @@ const Modules = () => {
       </Link>
       {module.notebook_link && (
         <CardContent className="pt-0">
-          <a 
-            href={module.notebook_link} 
-            target="_blank" 
+          <a
+            href={module.notebook_link}
+            target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             className="inline-flex items-center gap-2 text-sm text-primary hover:underline"

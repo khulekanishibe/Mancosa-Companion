@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Calculator, BookOpen, HelpCircle, Library, Info, GraduationCap, Users } from 'lucide-react';
+import { Calculator, BookOpen, HelpCircle, Library, Info, GraduationCap, Users, Layout } from 'lucide-react';
 
 const Navigation = () => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
-  
+
   const navItems = [
     { path: '/assessments', label: 'Calculator', icon: Calculator },
     { path: '/programmes', label: 'Programmes', icon: GraduationCap },
@@ -14,6 +14,7 @@ const Navigation = () => {
     { path: '/resources', label: 'Resources', icon: HelpCircle },
     { path: '/academic-support', label: 'Support', icon: Users },
     { path: '/about', label: 'About', icon: Info },
+    { path: '/workspace', label: 'Workspace', icon: Layout },
   ];
 
   return (
@@ -24,15 +25,15 @@ const Navigation = () => {
             <Calculator className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold text-sidebar-foreground">MANCOSA Companion</span>
           </Link>
-          
+
           <div className="hidden md:flex space-x-1">
             {navItems.map(({ path, label, icon: Icon }) => (
-              <Link 
-                key={path} 
-                to={path} 
+              <Link
+                key={path}
+                to={path}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
-                  isActive(path) 
-                    ? 'bg-primary text-primary-foreground shadow-lg' 
+                  isActive(path)
+                    ? 'bg-primary text-primary-foreground shadow-lg'
                     : 'text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground'
                 }`}
               >

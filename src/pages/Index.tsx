@@ -10,14 +10,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="w-48 h-48 mx-auto mb-6 bg-gradient-to-br from-[#145A32] to-[#2ECC71] rounded-full p-4 flex items-center justify-center">
-            <img 
-              src={mascotLogo} 
-              alt="MANCOSA Student Hub" 
+            <img
+              src={mascotLogo}
+              alt="MANCOSA Student Hub"
               className="w-full h-full object-contain"
             />
           </div>
@@ -96,8 +96,8 @@ const Index = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                MANCOSA Companion is designed to help BCOM Information Technology students 
-                manage their academic journey with tools for grade calculation, module information, 
+                MANCOSA Companion is designed to help BCOM Information Technology students
+                manage their academic journey with tools for grade calculation, module information,
                 and study resources.
               </p>
               <div className="flex gap-4">

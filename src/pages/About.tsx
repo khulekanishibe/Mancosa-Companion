@@ -26,7 +26,7 @@ const About = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
-                  MANCOSA Companion is a comprehensive tool designed for BCom (Information & Technology Management) 
+                  MANCOSA Companion is a comprehensive tool designed for BCom (Information & Technology Management)
                   students to help calculate required marks, track academic progress, and access module resources.
                 </p>
                 <div className="grid md:grid-cols-3 gap-4 mt-6">
@@ -101,7 +101,7 @@ const About = () => {
                     <strong>Important:</strong> Even if your overall mark is above 50%, you can still fail if you don't meet sub-minimum requirements.
                   </AlertDescription>
                 </Alert>
-                
+
                 <div className="space-y-4 mt-4">
                   <div>
                     <h4 className="font-semibold mb-2">1. Formative Assessment Sub-Minimum (50%)</h4>
@@ -112,7 +112,7 @@ const About = () => {
                       Example: If you scored 8/10 on KCQ and 20/30 on Case Study, your formative average is (8+20)/(10+30) = 70% ✓
                     </div>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-semibold mb-2">2. OSA Sub-Minimum (30% or 40%)</h4>
                     <p className="text-sm text-muted-foreground mb-2">
@@ -143,7 +143,7 @@ const About = () => {
                       <li>OSA: 60% (30% sub-minimum)</li>
                     </ul>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-semibold mb-2">Year 2</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">
@@ -152,7 +152,7 @@ const About = () => {
                       <li>OSA: 60% (30% sub-minimum)</li>
                     </ul>
                   </div>
-                  
+
                   <div>
                     <h4 className="font-semibold mb-2">Year 3</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-4">

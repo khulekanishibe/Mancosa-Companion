@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Document } from '@/pages/IDE';
+import { Document } from '@/types';
 import { X } from 'lucide-react';
 
 interface MainPanelProps {

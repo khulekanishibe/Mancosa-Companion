@@ -1,55 +1,27 @@
-import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import React from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { KeyRound } from 'lucide-react';
 
 interface ApiKeyModalProps {
-  children: React.ReactNode;
-  onSave: (apiKey: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ children, onSave }) => {
-  const [apiKey, setApiKey] = useState('');
-
-  const handleSave = () => {
-    onSave(apiKey);
-  };
-
+const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <KeyRound className="h-5 w-5" />
-            <span>Set Your API Key</span>
-          </DialogTitle>
+          <DialogTitle>Set API Key</DialogTitle>
           <DialogDescription>
-            Please provide your own LLM API key to use the AI features.
-            Your key is sent directly to the secure backend and is never stored in the browser.
+            Please enter your API key to use the AI features.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Input
-            id="apiKey"
-            placeholder="Enter your API key here..."
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
+        <div className="flex flex-col gap-4 py-4">
+          <Input placeholder="Enter your API key..." />
+          <Button onClick={onClose}>Save Key</Button>
         </div>
-        <DialogFooter>
-          <Button type="submit" onClick={handleSave}>Save Key</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

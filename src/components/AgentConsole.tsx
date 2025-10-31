@@ -1,19 +1,20 @@
 import React from 'react';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Send } from 'lucide-react';
 
-const AgentConsole = () => {
+const AgentConsole: React.FC = () => {
   return (
-    <div className="flex flex-col h-full bg-muted/40 p-2">
-      <h2 className="text-lg font-semibold mb-4">AI Agent Console</h2>
-      <div className="flex-grow bg-muted rounded-md p-2">
-        {/* Placeholder for AI agent interaction */}
-        <p className="text-sm text-muted-foreground">AI agent output will appear here.</p>
+    <div className="h-full flex flex-col p-2">
+      <div className="flex-grow bg-muted/20 rounded-md p-2 overflow-y-auto">
+        {/* Chat messages will go here */}
+        <p className="text-sm text-muted-foreground">AI Agent Console</p>
       </div>
-      <div className="mt-4">
-        <input
-          type="text"
-          placeholder="Send a message to the AI agent..."
-          className="w-full p-2 rounded-md bg-background border"
-        />
+      <div className="flex items-center gap-2 mt-2">
+        <Textarea placeholder="Type your message..." className="flex-grow" />
+        <Button>
+          <Send className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

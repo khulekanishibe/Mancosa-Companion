@@ -1,38 +1,48 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import IDE from "./pages/IDE";
+import Preloader from "@/components/Preloader";
+import Index from "./pages/Index";
+import Assessments from "./pages/Assessments";
+import Programmes from "./pages/Programmes";
+import Modules from "./pages/Modules";
+import Readings from "./pages/Readings";
+import Resources from "./pages/Resources";
+import AcademicSupport from "./pages/AcademicSupport";
+import About from "./pages/About";
+import Workspace from "./pages/Workspace";
 import NotFound from "./pages/NotFound";
-import { PreloaderAnimation } from "@/components/PreloaderAnimation";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Keep the preloader for 3 seconds
-
+    const timer = setTimeout(() => setLoading(false), 3000); // Adjust delay as needed
     return () => clearTimeout(timer);
   }, []);
-
-  if (isLoading) {
-    return <PreloaderAnimation onComplete={() => setIsLoading(false)} />;
-  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <Preloader isLoading={loading} />
         <Toaster />
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<IDE />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/assessments" element={<Assessments />} />
+            <Route path="/programmes" element={<Programmes />} />
+            <Route path="/modules" element={<Modules />} />
+            <Route path="/readings" element={<Readings />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/academic-support" element={<AcademicSupport />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/workspace" element={<Workspace />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -40,6 +50,6 @@ const App = () => {
       </TooltipProvider>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;

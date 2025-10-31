@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
+import Navigation from '@/components/Navigation';
 import Sidebar from '@/components/Sidebar';
 import MainPanel from '@/components/MainPanel';
 import AgentConsole from '@/components/AgentConsole';
@@ -38,31 +39,34 @@ const Workspace = () => {
 
     return (
         <div className="flex flex-col h-screen bg-background text-foreground font-sans">
-            <div className="flex-grow">
-                <PanelGroup direction="horizontal">
-                    <Panel defaultSize={20} minSize={15} className="bg-muted/20">
-                        <Sidebar documents={initialDocuments} onOpenFile={handleOpenFile} />
-                    </Panel>
-                    <PanelResizeHandle className="w-1 bg-muted hover:bg-primary" />
-                    <Panel>
-                        <PanelGroup direction="vertical">
-                            <Panel defaultSize={75} minSize={50} data-testid="main-panel">
-                                <MainPanel
-                                    openDocuments={openDocuments}
-                                    activeDocument={activeDocument}
-                                    onCloseFile={handleCloseFile}
-                                    onSetActiveDocument={setActiveDocument}
-                                />
-                            </Panel>
-                            <PanelResizeHandle className="h-1 bg-muted hover:bg-primary" />
-                            <Panel>
-                                <AgentConsole />
-                            </Panel>
-                        </PanelGroup>
-                    </Panel>
-                </PanelGroup>
+            <Navigation />
+            <div className="flex-grow flex flex-col">
+                <div className="flex-grow">
+                    <PanelGroup direction="horizontal">
+                        <Panel defaultSize={20} minSize={15} className="bg-muted/20">
+                            <Sidebar documents={initialDocuments} onOpenFile={handleOpenFile} />
+                        </Panel>
+                        <PanelResizeHandle className="w-1 bg-muted hover:bg-primary" />
+                        <Panel>
+                            <PanelGroup direction="vertical">
+                                <Panel defaultSize={75} minSize={50} data-testid="main-panel">
+                                    <MainPanel
+                                        openDocuments={openDocuments}
+                                        activeDocument={activeDocument}
+                                        onCloseFile={handleCloseFile}
+                                        onSetActiveDocument={setActiveDocument}
+                                    />
+                                </Panel>
+                                <PanelResizeHandle className="h-1 bg-muted hover:bg-primary" />
+                                <Panel>
+                                    <AgentConsole />
+                                </Panel>
+                            </PanelGroup>
+                        </Panel>
+                    </PanelGroup>
+                </div>
+                <StatusBar onOpenApiKeyModal={() => setApiKeyModalOpen(true)} />
             </div>
-            <StatusBar onOpenApiKeyModal={() => setApiKeyModalOpen(true)} />
             <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setApiKeyModalOpen(false)} />
         </div>
     );

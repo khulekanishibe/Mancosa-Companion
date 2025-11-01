@@ -48,8 +48,8 @@ const Modules = () => {
   const year3Modules = filteredModules.filter(m => m.year === 3);
 
   const ModuleCard = ({ module }: { module: typeof MODULES[0] }) => (
-    <Card className="hover:shadow-lg transition-shadow">
-      <Link to={`/modules/${module.code}`}>
+    <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+      <Link to={`/module/${module.code}`} className="flex-1">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">

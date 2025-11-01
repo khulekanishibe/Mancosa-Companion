@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { QUALIFICATIONS, getAllLevels, getAllFaculties } from '@/data/qualifications';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,89 +49,91 @@ const Programmes = () => {
   const postgrad = filteredQualifications.filter(q => q.level === 'Postgraduate Diploma' || q.level === 'Honours Degree' || q.level === 'Masters Degree');
 
   const QualificationCard = ({ qualification }: { qualification: typeof QUALIFICATIONS[0] }) => (
-    <Card className="hover:shadow-lg transition-all">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <Badge variant="outline" className="text-xs">
-                NQF {qualification.nqf_level}
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                {qualification.total_credits} Credits
-              </Badge>
+    <Link to={`/programme/${qualification.id}`}>
+      <Card className="hover:shadow-lg transition-all h-full">
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="text-xs">
+                  NQF {qualification.nqf_level}
+                </Badge>
+                <Badge variant="secondary" className="text-xs">
+                  {qualification.total_credits} Credits
+                </Badge>
+              </div>
+              <CardTitle className="text-lg mb-1">{qualification.name}</CardTitle>
+              <CardDescription className="text-sm">{qualification.faculty}</CardDescription>
             </div>
-            <CardTitle className="text-lg mb-1">{qualification.name}</CardTitle>
-            <CardDescription className="text-sm">{qualification.faculty}</CardDescription>
+            <GraduationCap className="h-8 w-8 text-primary flex-shrink-0" />
           </div>
-          <GraduationCap className="h-8 w-8 text-primary flex-shrink-0" />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">
-          {qualification.description}
-        </p>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            {qualification.description}
+          </p>
 
-        {qualification.coordinator && (
-          <div className="flex items-center gap-2 mb-4 p-3 bg-muted/50 rounded-lg">
-            <UserCheck className="h-4 w-4 text-primary flex-shrink-0" />
-            <div className="text-sm">
-              <span className="font-medium text-muted-foreground">Academic Support:</span>{' '}
-              <span className="text-foreground">{qualification.coordinator}</span>
+          {qualification.coordinator && (
+            <div className="flex items-center gap-2 mb-4 p-3 bg-muted/50 rounded-lg">
+              <UserCheck className="h-4 w-4 text-primary flex-shrink-0" />
+              <div className="text-sm">
+                <span className="font-medium text-muted-foreground">Academic Support:</span>{' '}
+                <span className="text-foreground">{qualification.coordinator}</span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <Accordion type="single" collapsible className="w-full">
-          {qualification.career_outcomes && qualification.career_outcomes.length > 0 && (
-            <AccordionItem value="careers">
+          <Accordion type="single" collapsible className="w-full">
+            {qualification.career_outcomes && qualification.career_outcomes.length > 0 && (
+              <AccordionItem value="careers">
+                <AccordionTrigger className="text-sm py-2">
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Career Outcomes</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-1 ml-6">
+                    {qualification.career_outcomes.map((career, idx) => (
+                      <li key={idx} className="text-sm text-muted-foreground list-disc">
+                        {career}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            )}
+
+            <AccordionItem value="details">
               <AccordionTrigger className="text-sm py-2">
                 <div className="flex items-center gap-2">
-                  <Briefcase className="h-4 w-4" />
-                  <span>Career Outcomes</span>
+                  <Award className="h-4 w-4" />
+                  <span>Programme Details</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <ul className="space-y-1 ml-6">
-                  {qualification.career_outcomes.map((career, idx) => (
-                    <li key={idx} className="text-sm text-muted-foreground list-disc">
-                      {career}
-                    </li>
-                  ))}
-                </ul>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Duration:</span>
+                    <span className="font-medium">{qualification.duration_years} {qualification.duration_years === 1 ? 'Year' : 'Years'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">SAQA ID:</span>
+                    <span className="font-medium">{qualification.saqa_id}</span>
+                  </div>
+                  {qualification.entry_requirements && (
+                    <div className="pt-2 border-t">
+                      <p className="text-muted-foreground mb-1">Entry Requirements:</p>
+                      <p className="text-xs">{qualification.entry_requirements}</p>
+                    </div>
+                  )}
+                </div>
               </AccordionContent>
             </AccordionItem>
-          )}
-
-          <AccordionItem value="details">
-            <AccordionTrigger className="text-sm py-2">
-              <div className="flex items-center gap-2">
-                <Award className="h-4 w-4" />
-                <span>Programme Details</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Duration:</span>
-                  <span className="font-medium">{qualification.duration_years} {qualification.duration_years === 1 ? 'Year' : 'Years'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">SAQA ID:</span>
-                  <span className="font-medium">{qualification.saqa_id}</span>
-                </div>
-                {qualification.entry_requirements && (
-                  <div className="pt-2 border-t">
-                    <p className="text-muted-foreground mb-1">Entry Requirements:</p>
-                    <p className="text-xs">{qualification.entry_requirements}</p>
-                  </div>
-                )}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </CardContent>
-    </Card>
+          </Accordion>
+        </CardContent>
+      </Card>
+    </Link>
   );
 
   return (

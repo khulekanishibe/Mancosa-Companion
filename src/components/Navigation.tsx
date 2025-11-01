@@ -7,14 +7,13 @@ const Navigation = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navItems = [
-    { path: '/assessments', label: 'Calculator', icon: Calculator },
+    { path: '/', label: 'Home', icon: Calculator },
     { path: '/programmes', label: 'Programmes', icon: GraduationCap },
     { path: '/modules', label: 'Modules', icon: BookOpen },
-    { path: '/readings', label: 'Readings', icon: Library },
-    { path: '/resources', label: 'Resources', icon: HelpCircle },
-    { path: '/academic-support', label: 'Support', icon: Users },
-    { path: '/about', label: 'About', icon: Info },
     { path: '/workspace', label: 'Workspace', icon: Layout },
+    { path: '/assessments', label: 'Calculator', icon: Calculator },
+    { path: '/resources', label: 'Resources', icon: Library },
+    { path: '/academic-support', label: 'Support', icon: Users },
   ];
 
   return (

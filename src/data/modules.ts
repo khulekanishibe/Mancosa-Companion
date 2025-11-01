@@ -383,3 +383,19 @@ export function searchModules(query: string): Module[] {
     m.title.toLowerCase().includes(lowerQuery)
   );
 }
+
+export function getModulesByQualification(qualificationId: string): Module[] {
+  // Map qualification IDs to programme IDs
+  const qualificationMap: Record<string, string[]> = {
+    'bcom-itm': ['BCOM_ITM'],
+    'bcom-accounting': ['BCOM_ACC'],
+    'bba': ['BBA'],
+    'bpa': ['BPA'],
+    // Add more mappings as needed
+  };
+  
+  const programmeIds = qualificationMap[qualificationId.toLowerCase()] || [];
+  return MODULES.filter(module => 
+    programmeIds.includes(module.programmeId)
+  );
+}

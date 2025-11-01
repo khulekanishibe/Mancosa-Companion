@@ -8,7 +8,9 @@ import Preloader from "@/components/Preloader";
 import Index from "./pages/Index";
 import Assessments from "./pages/Assessments";
 import Programmes from "./pages/Programmes";
+import ProgrammeDetail from "./pages/ProgrammeDetail";
 import Modules from "./pages/Modules";
+import ModuleDetail from "./pages/ModuleDetail";
 import Readings from "./pages/Readings";
 import Resources from "./pages/Resources";
 import AcademicSupport from "./pages/AcademicSupport";
@@ -35,14 +37,16 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/assessments" element={<Assessments />} />
             <Route path="/programmes" element={<Programmes />} />
+            <Route path="/programme/:id" element={<ProgrammeDetail />} />
             <Route path="/modules" element={<Modules />} />
-            <Route path="/readings" element={<Readings />} />
+            <Route path="/module/:code" element={<ModuleDetail />} />
+            <Route path="/workspace" element={<Workspace />} />
+            <Route path="/assessments" element={<Assessments />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/academic-support" element={<AcademicSupport />} />
             <Route path="/about" element={<About />} />
-            <Route path="/workspace" element={<Workspace />} />
+            <Route path="/readings" element={<Readings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
